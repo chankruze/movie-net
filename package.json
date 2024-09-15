@@ -1,0 +1,18 @@
+{
+  "name": "movie-net",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"cd frontend && npm i && npm run dev\" \"cd backend && npm i && npm run dev\"",
+    "start": "concurrently \"cd frontend && npm i && npm run build && npm run start\" \"cd backend && npm i && npm run start\""
+  },
+  "keywords": [
+    "movie",
+    "reactjs",
+    "nodejs"
+  ],
+  "author": "chankruze <chankruze@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
