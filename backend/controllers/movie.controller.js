@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const Movie = require("../models/movie.model");
 const { default: mongoose } = require("mongoose");
 const Admin = require("../models/admin.model");
+
 const addMovie = async (req, res, next) => {
   const extractedToken = req.headers.authorization.split(" ")[1];
   if (!extractedToken && extractedToken.trim() === "") {
