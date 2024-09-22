@@ -1,5 +1,16 @@
 import axios from "axios";
-import dotenv from "dotenv";
+
+export const getLatestMovies = async () => {
+  const res = await axios.get("/movie/latest").catch((err) => console.log(err));
+
+  if (res.status !== 200) {
+    return console.log("No Data");
+  }
+
+  const data = await res.data;
+  return data;
+};
+
 export const getAllMovies = async () => {
   const res = await axios.get("/movie").catch((err) => console.log(err));
 

@@ -12,8 +12,11 @@ const MovieItem = ({ title, releaseDate, posterUrl, id }) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        margin: 2,
-        width: 250,
+        width: {
+          xs: "100%",
+          sm: 250,
+          "md": 280,
+        },
         borderRadius: 3,
         ":hover": {
           boxShadow: "10px 10px 20px #ccc",
@@ -38,11 +41,11 @@ const MovieItem = ({ title, releaseDate, posterUrl, id }) => {
           gutterBottom
           variant="h6"
           component="div"
-          // sx={{
-          //   whiteSpace: "nowrap",
-          //   overflow: "hidden",
-          //   textOverflow: "ellipsis",
-          // }}
+        // sx={{
+        //   whiteSpace: "nowrap",
+        //   overflow: "hidden",
+        //   textOverflow: "ellipsis",
+        // }}
         >
           {title}
         </Typography>

@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Box, Typography, Button } from "@mui/material";
-import MovieItem from "./Movies/MovieItem";
+import { Box, Button, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAllMovies } from "../apiservice/apiservice";
+import { getLatestMovies } from "../apiservice/apiservice";
+import MovieItem from "./Movies/MovieItem";
 
 const HomePage = () => {
   const [movies, setMovies] = useState([]);
   useEffect(() => {
-    getAllMovies()
+    getLatestMovies()
       .then((data) => setMovies(data.movies))
       .catch((err) => console.log(err));
   });
@@ -26,17 +26,19 @@ const HomePage = () => {
           Latest Releases
         </Typography>
       </Box>
-      <Box
-        display={"flex"}
-        width={"80%"}
-        justifyContent={"center"}
-        flexWrap={"wrap"}
-        margin={"auto"}
-        alignItems={"center"}
-      >
+      <Box sx={{
+        padding: 8,
+        marginTop: 4,
+        display: "grid",
+        gridTemplateColumns: {
+          xs: "1fr",    // 1 column for mobile (xs)
+          md: "repeat(3, 1fr)",  // 3 columns for medium screens (md)
+          lg: "repeat(4, 1fr)",  // 4 columns for large screens (lg)
+        },
+        gap: 2,  // Optional: Add gap between grid items
+      }}>
         {movies &&
           movies
-            .slice(0, 4)
             .map((movie, index) => (
               <MovieItem
                 id={movie._id}

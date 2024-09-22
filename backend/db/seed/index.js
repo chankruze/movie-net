@@ -1,13 +1,17 @@
-const movies = require("./data");
+const movies = require("./movies");
 const Movie = require("../../models/movie.model");
 const mongoose = require("mongoose");
 const Admin = require("../../models/admin.model");
 const dotenv = require("dotenv");
 
 async function seedMovies() {
-  for (const movieData of movies) {
-    let movie;
-    try {
+  let session;
+
+  try {
+    session = await mongoose.startSession();
+    session.startTransaction();
+
+    const moviePromises = movies.map(async (movieData) => {
       const {
         description,
         releaseDate,
@@ -17,9 +21,10 @@ async function seedMovies() {
         posterUrl,
         title,
       } = movieData;
-      movie = new Movie({
+
+      const movie = new Movie({
         description,
-        releaseDate: new Date(`${releaseDate}`),
+        releaseDate: new Date(releaseDate),
         featured,
         actors,
         admin: adminId,
@@ -27,31 +32,34 @@ async function seedMovies() {
         title,
       });
 
-      const session = await mongoose.startSession();
-      const adminUser = await Admin.findById(adminId);
-
+      const adminUser = await Admin.findById(adminId).session(session);
       if (!adminUser) {
         console.log(
           `Admin with ID ${adminId} not found. Skipping movie "${title}".`
         );
-        continue; // Skip if admin is not found
+        return null;
       }
 
-      session.startTransaction();
-      await movie.save({ session });
       adminUser.addedMovies.push(movie);
       await adminUser.save({ session });
-      await session.commitTransaction();
 
-      console.log(`Movie "${title}" successfully seeded.`);
-    } catch (err) {
-      console.log(`Error seeding movie "${movieData.title}":`, err);
-      continue; // Skip to next movie in case of error
+      return movie;
+    });
+
+    const moviesToInsert = await Promise.all(moviePromises);
+    const validMovies = moviesToInsert.filter(Boolean); // Filter out null values
+
+    if (validMovies.length > 0) {
+      await Movie.insertMany(validMovies, { session });
     }
 
-    if (!movie) {
-      console.log(`Failed to seed movie "${movieData.title}".`);
-    }
+    await session.commitTransaction();
+    console.log(`${validMovies.length} movies successfully seeded.`);
+  } catch (err) {
+    console.error("Error seeding movies:", err);
+    await session.abortTransaction();
+  } finally {
+    session.endSession();
   }
 }
 

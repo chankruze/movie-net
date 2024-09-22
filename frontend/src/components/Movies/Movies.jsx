@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import MovieItem from "./MovieItem";
 import { getAllMovies } from "../../apiservice/apiservice";
+import MovieItem from "./MovieItem";
 
 const Movies = () => {
   const [movies, setMovies] = useState();
@@ -11,7 +11,9 @@ const Movies = () => {
       .catch((err) => console.log(err));
   }, []);
   return (
-    <Box margin={"auto"} marginTop={4}>
+    <Box sx={{
+      padding: 4
+    }}>
       <Typography
         margin={"auto"}
         variant="h4"
@@ -23,14 +25,16 @@ const Movies = () => {
       >
         All Movies
       </Typography>
-      <Box
-        width={"100%"}
-        margin="auto"
-        marginTop={5}
-        display={"flex"}
-        justifyContent="flex-start"
-        flexWrap={"wrap"}
-      >
+      <Box sx={{
+        marginTop: 4,
+        display: "grid",
+        gridTemplateColumns: {
+          xs: "1fr",    // 1 column for mobile (xs)
+          md: "repeat(3, 1fr)",  // 3 columns for medium screens (md)
+          lg: "repeat(5, 1fr)",  // 4 columns for large screens (lg)
+        },
+        gap: 2,  // Optional: Add gap between grid items
+      }}>
         {movies &&
           movies.map((movie, index) => (
             <MovieItem
@@ -42,7 +46,7 @@ const Movies = () => {
             />
           ))}
       </Box>
-    </Box>
+    </Box >
   );
 };
 

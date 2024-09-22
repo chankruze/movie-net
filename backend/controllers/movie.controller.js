@@ -76,6 +76,19 @@ const getMovies = async (req, res, next) => {
   }
 };
 
+const getLatestMovies = async (req, res, next) => {
+  try {
+    const limit = parseInt(req.query.limit) || 12;
+    let movies = await Movie.find().sort({ releaseDate: -1 }).limit(limit);
+    if (!movies) {
+      return res.status(500).json({ message: "Request failed" });
+    }
+    return res.status(200).json({ movies });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const getMovieById = async (req, res, next) => {
   const id = req.params.id;
   try {
@@ -89,4 +102,5 @@ const getMovieById = async (req, res, next) => {
     return console.log(err);
   }
 };
-module.exports = { addMovie, getMovies, getMovieById };
+
+module.exports = { addMovie, getMovies, getMovieById, getLatestMovies };

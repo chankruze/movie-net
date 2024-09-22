@@ -6,9 +6,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import { addMovie } from "../../apiservice/apiservice";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { addMovie } from "../../apiservice/apiservice";
 const labelProps = {
   mt: 1,
   mb: 1,
